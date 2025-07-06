@@ -1,0 +1,143 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --color-alice-blue: #DBDFE9;
+  --color-greenish: #CFDECA;
+  --color-vanilla: #EFF0A3;
+  --color-dark: #212121;
+  --color-light: #F6F5FA;
+
+  --font-sans: Urbanist, sans-serif;
+
+  --radius-xl: 1rem;
+  --radius-lg: .75rem;
+
+  --shadow-soft: 0 2px 8px 0 rgba(33,33,33,0.06);
+}
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light;
+  color: #212121;
+  background-color: #F6F5FA;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/* 
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #F6F5FA;
+  color: #212121;
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+  color: #212121;
+}
+
+button {
+  border-radius: 12px;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #EFF0A3;
+  color: #212121;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+button:hover {
+  background-color: #CFDECA;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 2px solid #EFF0A3;
+  outline-offset: 2px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+#root {
+  padding: 0;
+} */
+
+/* App-wide styles for new theme */
+/* .app-card {
+  background: #F6F5FA;
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid #DBDFE9;
+}
+
+.app-btn {
+  background: #EFF0A3;
+  color: #212121;
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.app-btn:hover {
+  background: #CFDECA;
+}
+
+.app-btn-secondary {
+  background: #DBDFE9;
+  color: #212121;
+  border-radius: 12px;
+  font-weight: 500;
+  padding: 0.75rem 2rem;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+.app-btn-secondary:hover {
+  background: #CFDECA;
+}
+
+input, textarea, select {
+  background: #F6F5FA;
+  border: 1px solid #DBDFE9;
+  border-radius: 12px;
+  color: #212121;
+  padding: 0.75rem 1rem;
+  font-family: "Inter", sans-serif;
+  font-size: 1rem;
+  outline: none;
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: #EFF0A3;
+}
+
+.card {
+  background: #F6F5FA;
+  border: 1px solid #DBDFE9;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.image-container {
+  border-radius: 12px;
+  overflow: hidden;
+} */
