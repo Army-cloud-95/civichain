@@ -51,7 +51,7 @@ const PublicFeed = () => {
   useEffect(() => {
     const fetchIssues = async () => {
       setLoading(true);
-      setError(null);
+      setError(null); 
       try {
         const res = await fetch('http://localhost:5000/api/issues');
         if (!res.ok) throw new Error('Failed to fetch issues');
@@ -69,26 +69,26 @@ const PublicFeed = () => {
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
-        return '#FFFA03';
+        return 'bg-yellow-100 text-yellow-800';
       case 'in-progress':
-        return '#DBE7F0';
+        return 'bg-blue-100 text-blue-800';
       case 'resolved':
-        return '#CFDECA';
+        return 'bg-green-100 text-green-800';
       default:
-        return '#F6F5FA';
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
   const getUrgencyColor = (urgency) => {
     switch (urgency) {
       case 'high':
-        return '#FFFA03';
+        return 'bg-red-100 text-red-800';
       case 'medium':
-        return '#DBE7F0';
+        return 'bg-orange-100 text-orange-800';
       case 'low':
-        return '#CFDECA';
+        return 'bg-green-100 text-green-800';
       default:
-        return '#F6F5FA';
+        return 'bg-gray-100 text-gray-800';
     }
   };
 
@@ -127,158 +127,135 @@ const PublicFeed = () => {
   });
 
   const renderCard = (issue) => (
-    <div 
-      key={issue._id || issue.id} 
-      className="rounded-2xl overflow-hidden transition-all transform hover:-translate-y-1"
-      style={{ backgroundColor: '#F6F5FA', border: '1px solid #DBE7F0' }}
-    >
+    <div key={issue._id || issue.id} className="card group">
       {issue.images && issue.images[0] && (
-        <div className="relative h-48">
+        <div className="relative h-48 mb-6 rounded-xl overflow-hidden">
           <img
             src={issue.images[0]}
             alt={issue.title}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
+          <div className="absolute top-4 right-4">
+            <span className={`px-3 py-1 text-xs font-semibold rounded-full ${getUrgencyColor(issue.urgency)}`}>
+              {issue.urgency || 'normal'}
+            </span>
+          </div>
         </div>
       )}
-      <div className="p-6">
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-semibold" style={{ color: '#212121' }}>{issue.title}</h3>
-          <span 
-            className="px-3 py-1 text-xs font-semibold rounded-full"
-            style={{ backgroundColor: getUrgencyColor(issue.urgency), color: '#212121' }}
-          >
-            {issue.urgency || 'normal'}
-          </span>
+      
+      <div className="space-y-4">
+        <div className="flex justify-between items-start">
+          <h3 className="text-xl font-semibold text-black group-hover:text-primary transition-colors">
+            {issue.title}
+          </h3>
         </div>
-        <p className="text-sm mb-4" style={{ color: '#212121', opacity: '0.8' }}>{issue.description}</p>
-        <div className="flex items-center text-sm mb-4" style={{ color: '#212121', opacity: '0.7' }}>
-          <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        
+        <p className="text-gray-600 leading-relaxed">{issue.description}</p>
+        
+        <div className="flex items-center text-sm text-gray-500">
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
           </svg>
           {issue.location}
         </div>
-        <div className="flex justify-between items-center">
-          <span 
-            className="text-sm font-medium px-3 py-1 rounded-full"
-            style={{ backgroundColor: getStatusColor(issue.status), color: '#212121' }}
-          >
+        
+        <div className="flex justify-between items-center pt-4 border-t border-gray-100">
+          <span className={`text-sm font-medium px-3 py-1 rounded-full ${getStatusColor(issue.status)}`}>
             {issue.status || 'pending'}
           </span>
-          <div className="flex items-center">
-            <button 
-              className="flex items-center p-2 rounded-xl transition-all"
-              style={{ color: '#212121', backgroundColor: '#DBE7F0' }}
-              onMouseEnter={(e) => e.target.style.backgroundColor = '#CFDECA'}
-              onMouseLeave={(e) => e.target.style.backgroundColor = '#DBE7F0'}
-            >
-              <svg className="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
-              </svg>
-              {issue.votes || 0}
-            </button>
-          </div>
+          
+          <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors text-gray-600 hover:text-primary">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5" />
+            </svg>
+            <span className="font-medium">{issue.votes || 0}</span>
+          </button>
         </div>
       </div>
     </div>
   );
 
   return (
-    <div className="min-h-screen pt-20" style={{ backgroundColor: '#F6F5FA' }}>
-      <div className="container mx-auto px-8 py-12">
-        <h1 className="text-3xl font-bold text-center mb-8" style={{ color: '#212121' }}>
-          Public Issue Feed
-        </h1>
+    <div className="min-h-screen pt-16 bg-gradient-to-br from-blue-50 to-white">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-12">
+        <div className="text-center mb-12">
+          <h1 className="text-responsive-lg font-bold mb-4 text-black">
+            Public Issue Feed
+          </h1>
+          <p className="text-responsive-md text-gray-600 max-w-3xl mx-auto">
+            Stay informed about civic issues in your community. Track progress and support initiatives that matter to you.
+          </p>
+        </div>
 
         {/* Filter Section */}
-        <div className="p-6 rounded-2xl mb-8" style={{ backgroundColor: '#DBDFE9' }}>
+        <div className="card mb-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <input
               type="text"
               placeholder="Search issues..."
-              className="rounded-xl px-4 py-2 focus:outline-none transition-all"
-              style={{ 
-                backgroundColor: '#F6F5FA', 
-                border: '2px solid #DBDFE9',
-                color: '#212121'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#EFF0A3'}
-              onBlur={(e) => e.target.style.borderColor = '#DBDFE9'}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
+              className="form-input"
             />
-            <select 
-              className="rounded-xl px-4 py-2 focus:outline-none transition-all"
-              style={{ 
-                backgroundColor: '#F6F5FA', 
-                border: '2px solid #DBDFE9',
-                color: '#212121'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#EFF0A3'}
-              onBlur={(e) => e.target.style.borderColor = '#DBDFE9'}
+            
+            <select
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
+              className="form-input"
             >
               <option value="">All Categories</option>
+              <option value="electricity">Electricity</option>
               <option value="sanitation">Sanitation</option>
               <option value="water">Water</option>
-              <option value="electricity">Electricity</option>
               <option value="roads">Roads</option>
+              <option value="parks">Parks</option>
             </select>
-            <select 
-              className="rounded-xl px-4 py-2 focus:outline-none transition-all"
-              style={{ 
-                backgroundColor: '#F6F5FA', 
-                border: '2px solid #DBDFE9',
-                color: '#212121'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#EFF0A3'}
-              onBlur={(e) => e.target.style.borderColor = '#DBDFE9'}
+            
+            <select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
+              className="form-input"
             >
-              <option value="">All Statuses</option>
+              <option value="">All Status</option>
               <option value="pending">Pending</option>
               <option value="in-progress">In Progress</option>
               <option value="resolved">Resolved</option>
             </select>
-            <select 
-              className="rounded-xl px-4 py-2 focus:outline-none transition-all"
-              style={{ 
-                backgroundColor: '#F6F5FA', 
-                border: '2px solid #DBDFE9',
-                color: '#212121'
-              }}
-              onFocus={(e) => e.target.style.borderColor = '#EFF0A3'}
-              onBlur={(e) => e.target.style.borderColor = '#DBDFE9'}
+            
+            <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
+              className="form-input"
             >
-              <option value="date">Sort By Date</option>
-              <option value="votes">Sort By Votes</option>
-              <option value="urgency">Sort By Urgency</option>
+              <option value="date">Sort by Date</option>
+              <option value="votes">Sort by Votes</option>
+              <option value="urgency">Sort by Urgency</option>
             </select>
           </div>
         </div>
 
-        {/* Static Cards */}
-        <h2 className="text-2xl font-bold mb-4" style={{ color: '#212121' }}>Featured Issues</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {filteredStatic.map(renderCard)}
-        </div>
+        {/* Issues Grid */}
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+            <p className="mt-4 text-gray-600">Loading issues...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-600">{error}</p>
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[...filteredStatic, ...filteredDynamic].map(renderCard)}
+          </div>
+        )}
 
-        {/* Dynamic Cards */}
-        <h2 className="text-2xl font-bold mb-4" style={{ color: '#212121' }}>Latest Community Reports</h2>
-        {loading && (
-          <div className="text-center py-12" style={{ color: '#212121' }}>Loading issues...</div>
+        {!loading && !error && [...filteredStatic, ...filteredDynamic].length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-gray-600">No issues found matching your criteria.</p>
+          </div>
         )}
-        {error && (
-          <div className="text-center py-12" style={{ color: '#212121' }}>{error}</div>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {!loading && !error && filteredDynamic.map(renderCard)}
-        </div>
       </div>
     </div>
   );

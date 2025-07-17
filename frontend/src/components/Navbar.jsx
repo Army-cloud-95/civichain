@@ -1,128 +1,69 @@
 import { Link, useLocation } from "react-router-dom";
-import logo from "../assets/logo.png";
+import logo from "../assets/logoooo.png";
 
 const Navbar = () => {
   const location = useLocation();
 
   return (
-    <header className="fixed px-8 z-20 bg-white w-full">
-      <nav className="max-w-7xl mx-auto p-4 backdrop-blur-md">
-        <div className="flex justify-between items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-gray-100 shadow-soft">
+      <nav className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="flex justify-between items-center h-16">
           <Link
             to="/"
-            className="flex items-center gap-2 text-2xl font-bold min-w-fit text-dark"
+            className="flex items-center gap-3 text-2xl font-bold text-black hover:opacity-80 transition-opacity"
           >
             <img src={logo} alt="CiviChain Logo" className="h-8 w-auto" />
-            <span>CiviChain</span>
+            <span className="gradient-text">CiviChain</span>
           </Link>
-          <div className="flex gap-1 items-center">
-            <Link className="px-3 py-2 hover:bg-slate-200 rounded-lg" to="/issues">View Listings</Link>
-            <Link className="px-3 py-2 hover:bg-slate-200 rounded-lg" to="/report">Report an Issue</Link>
+          
+          <div className="hidden md:flex items-center gap-1">
+            <Link 
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                location.pathname === '/' 
+                  ? 'text-primary bg-blue-50' 
+                  : 'text-gray-600 hover:text-primary hover:bg-blue-50'
+              }`}
+              to="/"
+            >
+              Home
+            </Link>
+            <Link 
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                location.pathname === '/feed' 
+                  ? 'text-primary bg-blue-50' 
+                  : 'text-gray-600 hover:text-primary hover:bg-blue-50'
+              }`}
+              to="/feed"
+            >
+              View Listings
+            </Link>
+            <Link 
+              className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                location.pathname === '/report' 
+                  ? 'text-primary bg-blue-50' 
+                  : 'text-gray-600 hover:text-primary hover:bg-blue-50'
+              }`}
+              to="/report"
+            >
+              Report an Issue
+            </Link>
+            <Link 
+              className="btn-primary ml-2"
+              to="/login"
+            >
+              Login
+            </Link>
           </div>
+
+          {/* Mobile menu button */}
+          <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
         </div>
       </nav>
     </header>
-
-    // <nav
-    //   className="fixed w-full z-50 border-b shadow-sm"
-    //   style={{ backgroundColor: '#DBDFE9' }}
-    // >
-    //   <div className="flex justify-between items-center px-8 py-3 gap-x-12 flex-wrap">
-    //     <Link to="/" className="flex items-center gap-4 text-2xl font-bold min-w-fit">
-    //       <img src={logo} alt="CiviChain Logo" className="h-8 w-auto" />
-    //       <span style={{ color: '#212121' }}>
-    //         CiviChain
-    //       </span>
-    //     </Link>
-    //     <div className="flex items-center gap-10 flex-wrap min-w-0">
-    //       <Link
-    //         to="/"
-    //         className={`transition-all relative group`}
-    //         style={{ color: location.pathname === '/' ? '#EFF0A3' : '#212121' }}
-    //         onMouseEnter={e => e.target.style.color = '#EFF0A3'}
-    //         onMouseLeave={e => e.target.style.color = location.pathname === '/' ? '#EFF0A3' : '#212121'}
-    //       >
-    //         Home
-    //         <span
-    //           className="absolute -bottom-2 left-0 w-full h-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform"
-    //           style={{
-    //             backgroundColor: '#EFF0A3',
-    //             height: '2px',
-    //             display: location.pathname === '/' ? 'block' : 'none',
-    //             transformOrigin: 'left'
-    //           }}
-    //         ></span>
-    //       </Link>
-    //       <Link
-    //         to="/report"
-    //         className={`transition-all relative group`}
-    //         style={{ color: location.pathname === '/report' ? '#EFF0A3' : '#212121' }}
-    //         onMouseEnter={e => e.target.style.color = '#EFF0A3'}
-    //         onMouseLeave={e => e.target.style.color = location.pathname === '/report' ? '#EFF0A3' : '#212121'}
-    //       >
-    //         Report Issue
-    //         <span
-    //           className="absolute -bottom-2 left-0 w-full h-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform"
-    //           style={{
-    //             backgroundColor: '#EFF0A3',
-    //             height: '2px',
-    //             display: location.pathname === '/report' ? 'block' : 'none',
-    //             transformOrigin: 'left'
-    //           }}
-    //         ></span>
-    //       </Link>
-    //       <Link
-    //         to="/feed"
-    //         className={`transition-all relative group`}
-    //         style={{ color: location.pathname === '/feed' ? '#EFF0A3' : '#212121' }}
-    //         onMouseEnter={e => e.target.style.color = '#EFF0A3'}
-    //         onMouseLeave={e => e.target.style.color = location.pathname === '/feed' ? '#EFF0A3' : '#212121'}
-    //       >
-    //         Public Feed
-    //         <span
-    //           className="absolute -bottom-2 left-0 w-full h-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform"
-    //           style={{
-    //             backgroundColor: '#EFF0A3',
-    //             height: '2px',
-    //             display: location.pathname === '/feed' ? 'block' : 'none',
-    //             transformOrigin: 'left'
-    //           }}
-    //         ></span>
-    //       </Link>
-    //       <Link
-    //         to="/about"
-    //         className={`transition-all relative group`}
-    //         style={{ color: location.pathname === '/about' ? '#EFF0A3' : '#212121' }}
-    //         onMouseEnter={e => e.target.style.color = '#EFF0A3'}
-    //         onMouseLeave={e => e.target.style.color = location.pathname === '/about' ? '#EFF0A3' : '#212121'}
-    //       >
-    //         About
-    //         <span
-    //           className="absolute -bottom-2 left-0 w-full h-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform"
-    //           style={{
-    //             backgroundColor: '#EFF0A3',
-    //             height: '2px',
-    //             display: location.pathname === '/about' ? 'block' : 'none',
-    //             transformOrigin: 'left'
-    //           }}
-    //         ></span>
-    //       </Link>
-    //       <Link
-    //         to="/signin"
-    //         className="px-6 py-2 rounded-xl transition-all transform hover:scale-105 whitespace-nowrap"
-    //         style={{
-    //           backgroundColor: '#EFF0A3',
-    //           color: '#212121',
-    //           marginLeft: '0.5rem'
-    //         }}
-    //         onMouseEnter={(e) => e.target.style.backgroundColor = '#CFDECA'}
-    //         onMouseLeave={(e) => e.target.style.backgroundColor = '#EFF0A3'}
-    //       >
-    //         Sign In
-    //       </Link>
-    //     </div>
-    //   </div>
-    // </nav>
   );
 };
 

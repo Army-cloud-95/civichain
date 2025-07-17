@@ -3,9 +3,8 @@ import React from 'react';
 const IssueCategorySelect = ({ value, onChange, name }) => (
   <div>
     <label 
-      className="block font-medium mb-2" 
+      className="block font-medium mb-2 text-gray-700" 
       htmlFor="category"
-      style={{ color: '#212121' }}
     >
       Issue Category
     </label>
@@ -14,14 +13,7 @@ const IssueCategorySelect = ({ value, onChange, name }) => (
       name={name}
       value={value}
       onChange={onChange}
-      className="w-full rounded-xl px-4 py-3 focus:outline-none transition-all"
-      style={{ 
-        backgroundColor: '#F6F5FA', 
-        border: '2px solid #DBDFE9',
-        color: '#212121'
-      }}
-      onFocus={(e) => e.target.style.borderColor = '#EFF0A3'}
-      onBlur={(e) => e.target.style.borderColor = '#DBDFE9'}
+      className="form-input"
     >
       <option value="">Select a category</option>
       <option value="infrastructure">Infrastructure</option>

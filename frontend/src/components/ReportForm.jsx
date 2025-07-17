@@ -95,11 +95,7 @@ const ReportForm = () => {
   };
 
   return (
-    <form 
-      className="rounded-2xl p-8 mb-12"
-      style={{ backgroundColor: '#DBE7F0' }}
-      onSubmit={handleSubmit}
-    >
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-6">
         <IssueCategorySelect
           value={formData.category}
@@ -132,31 +128,21 @@ const ReportForm = () => {
           placeholder="Enter the address or location details"
         />
         <PhotoUpload onChange={handleImageChange} previews={previews} onRemove={handleRemoveImage} filenames={filenames} />
+        
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl px-6 py-3 font-medium transition-all transform hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-opacity-50 disabled:opacity-60"
-          style={{ 
-            backgroundColor: '#FFFA03', 
-            color: '#212121',
-            border: 'none'
-          }}
-          onMouseEnter={(e) => e.target.style.backgroundColor = '#CFDECA'}
-          onMouseLeave={(e) => e.target.style.backgroundColor = '#FFFA03'}
+          className="btn-primary w-full"
         >
           {loading ? 'Submitting...' : 'Submit Report'}
         </button>
+        
         {status && (
-          <div 
-            className={`mt-4 text-center font-medium rounded-xl p-3 ${
-              status.includes('success') 
-                ? 'text-green-700' 
-                : 'text-red-700'
-            }`}
-            style={{ 
-              backgroundColor: status.includes('success') ? '#CFDECA' : '#FFE6E6'
-            }}
-          >
+          <div className={`mt-4 text-center font-medium rounded-xl p-4 ${
+            status.includes('success') 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-red-100 text-red-800'
+          }`}>
             {status}
           </div>
         )}
