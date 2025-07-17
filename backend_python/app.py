@@ -3,6 +3,7 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 import torch
 import joblib
 import os
+import numpy as np
 
 app = Flask(__name__)
 
@@ -35,8 +36,7 @@ def predict():
     inputs_tag = tag_tokenizer(text, return_tensors="pt", truncation=True, padding=True).to("cuda")
     outputs_tag = tag_model(**inputs_tag)
     probs = torch.sigmoid(outputs_tag.logits).detach().cpu().numpy()[0]
-    print (probs)
-    tags = mlb.inverse_transform([probs > 0.5])[0]
+    tags = mlb.inverse_transform(np.array([probs > 0.5]))[0]
 
     return render_template("index.html", 
                            description=text, 
