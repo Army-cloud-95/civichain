@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Issue Classifier</title>
+</head>
+<body>
+    <h2>Enter Issue Description:</h2>
+    <form method="post" action="/predict">
+        <textarea name="description" rows="4" cols="60" placeholder="Type your issue here..." required></textarea><br><br>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if priority %}
+        <h3>Results:</h3>
+        <p><strong>Predicted Priority:</strong> {{ priority }}</p>
+        <p><strong>Predicted Tags:</strong> {{ tags|join(', ') }}</p>
+    {% endif %}
+</body>
+</html>
