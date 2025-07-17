@@ -1,0 +1,5 @@
+.ipynb_checkpoints/
+priority_model/
+tag_model/
+tagging_model/
+.venv/
