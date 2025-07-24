@@ -1,24 +1,48 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
-const PhotoUpload = ({ onChange, previews = [], onRemove, filenames = [] }) => (
-  <div>
-    <label 
-      className="block font-medium mb-2 text-gray-700" 
-      htmlFor="photos"
-    >
-      Upload Photos
-    </label>
-    <div className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary transition-colors bg-gray-50">
-      <input
-        type="file"
-        id="photos"
-        name="photos"
-        multiple
-        className="hidden"
-        accept="image/*"
-        onChange={onChange}
-      />
-      <label htmlFor="photos" className="cursor-pointer">
+const PhotoUpload = ({ onChange, previews = [], onRemove, filenames = [] }) => {
+  const inputRef = useRef();
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const event = { target: { files: e.dataTransfer.files } };
+      onChange(event);
+      e.dataTransfer.clearData();
+    }
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  return (
+    <div>
+      <label 
+        className="block font-medium mb-2 text-gray-700" 
+        htmlFor="photos"
+      >
+        Upload Photos
+      </label>
+      <div
+        className="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-primary transition-colors bg-gray-50"
+        onDrop={handleDrop}
+        onDragOver={handleDragOver}
+        onClick={() => inputRef.current.click()}
+        style={{ cursor: 'pointer' }}
+      >
+        <input
+          type="file"
+          id="photos"
+          name="photos"
+          multiple
+          className="hidden"
+          accept="image/*"
+          onChange={onChange}
+          ref={inputRef}
+        />
         <div className="text-gray-600">
           <svg 
             className="mx-auto h-12 w-12 mb-4 text-primary" 
@@ -35,35 +59,35 @@ const PhotoUpload = ({ onChange, previews = [], onRemove, filenames = [] }) => (
             Maximum 5 photos, each up to 5MB
           </p>
         </div>
-      </label>
-    </div>
-    {previews.length > 0 && (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 justify-center">
-        {previews.map((url, idx) => (
-          <div key={idx} className="relative group flex flex-col items-center">
-            <img
-              src={url}
-              alt={`Preview ${idx + 1}`}
-              className="w-28 h-28 object-cover rounded-xl border-2 border-gray-200 transition-transform duration-200 group-hover:scale-105"
-            />
-            {onRemove && (
-              <button
-                type="button"
-                onClick={() => onRemove(idx)}
-                className="absolute top-1 right-1 rounded-full w-6 h-6 flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity z-10 bg-red-500 text-white hover:bg-red-600"
-                title="Remove image"
-              >
-                &times;
-              </button>
-            )}
-            <span className="mt-2 text-xs truncate max-w-[7rem] text-center text-gray-600">
-              {filenames[idx] || `Image ${idx + 1}`}
-            </span>
-          </div>
-        ))}
       </div>
-    )}
-  </div>
-);
+      {previews.length > 0 && (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 justify-center">
+          {previews.map((url, idx) => (
+            <div key={idx} className="relative group flex flex-col items-center">
+              <img
+                src={url}
+                alt={`Preview ${idx + 1}`}
+                className="w-28 h-28 object-cover rounded-xl border-2 border-gray-200 transition-transform duration-200 group-hover:scale-105"
+              />
+              {onRemove && (
+                <button
+                  type="button"
+                  onClick={() => onRemove(idx)}
+                  className="absolute top-1 right-1 rounded-full w-6 h-6 flex items-center justify-center opacity-80 hover:opacity-100 transition-opacity z-10 bg-red-500 text-white hover:bg-red-600"
+                  title="Remove image"
+                >
+                  &times;
+                </button>
+              )}
+              <span className="mt-2 text-xs truncate max-w-[7rem] text-center text-gray-600">
+                {filenames[idx] || `Image ${idx + 1}`}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default PhotoUpload; 

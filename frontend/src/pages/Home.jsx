@@ -111,7 +111,7 @@ const Home = () => {
                   </p>
                   <a 
                     href="/report" 
-                    className="px-8 py-4 rounded-xl font-semibold transition-all transform hover:scale-105"
+                    className="px-8 py-4 rounded-xl font-semibold transition-all"
                     style={{ backgroundColor: '#EFF0A3', color: '#212121' }}
                     onMouseEnter={(e) => e.target.style.backgroundColor = '#CFDECA'}
                     onMouseLeave={(e) => e.target.style.backgroundColor = '#EFF0A3'}
