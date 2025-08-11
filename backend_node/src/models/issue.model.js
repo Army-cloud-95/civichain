@@ -6,12 +6,12 @@ const IssueSchema = new mongoose.Schema({
         required:true,
     },
     // location:{
-    //     type:{type:String, default:"Point",
+        // type:{type:String, default:"Point",
     //         required:true
-    //     },
+        // },
     //     coordinates:{type:[Number],
     //         required:true},
-    //     },
+        // },
     description:{
         type:String,
         required:true,
@@ -35,8 +35,8 @@ const IssueSchema = new mongoose.Schema({
     },
     approvedBy:{
         type: mongoose.Schema.Types.ObjectId,
-        ref:"Admin",
-        required:true,
+        ref:"Official",
+        // required:true,
     },
     progress:{
         type:String,

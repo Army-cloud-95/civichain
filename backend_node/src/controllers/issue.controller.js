@@ -4,17 +4,17 @@ import { Issue } from "../models/issue.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
-const issues = asyncHandler(async (req, res) => {
+const createIssue = asyncHandler(async (req, res) => {
     const {
         title,
         location,
         description,
-        owner,
         progress,
         tags,
         address,
         votes,
     } = req.body;
+    const owner = req.user._id;
 
     if (
         [
@@ -32,12 +32,12 @@ const issues = asyncHandler(async (req, res) => {
     }
     const existing = {
         tags: tags,
-        location: {
-            $near: {
-                $geometry: { type: "Point", coordinates: coords.coordinates },
-                $maxDistance: 5000,
-            },
-        },
+        // location: {
+        //     $near: {
+        //         $geometry: { type: "Point", coordinates: coords.coordinates },
+        //         $maxDistance: 5000,
+        //     },
+        // },
     };
     const ExistingIssue = await Issue.findOne(existing);
 
@@ -77,7 +77,7 @@ const issues = asyncHandler(async (req, res) => {
     return res
         .status(201)
         .json(
-            new ApiResponse(200, IssueCreated, "Issue Registerd Successfully", null)
+            new ApiResponse(200, issue, "Issue Registerd Successfully", null)
         );
 });
 
@@ -90,7 +90,7 @@ const getAllIssues = asyncHandler(async (req, res) => {
 const getSortedIssues = asyncHandler(async (req, res) => {
     const {
         search = "",
-        sortBy = req.query.sortBy,
+        sortBy = "createdAt",
         order = "desc",
     } = req.query;
     const searchQuery = {
@@ -115,4 +115,14 @@ const getSortedIssues = asyncHandler(async (req, res) => {
     }
 });
 
-export { issues, getAllIssues, getSortedIssues };
+const updateIssue = asyncHandler( async( req,res) => {
+    const issueId = req.params.issueId;
+    if(!issueId || issueId.trim() === ""){
+        throw new ApiError(400,"Issue is not valid");
+    }
+    const ExistingIssue = await Issue.findByIdAndUpdate(issueId,{})
+    if(!ExistingIssue){
+        throw new ApiError(400,"");
+    }
+});
+export { createIssue, getAllIssues, getSortedIssues, updateIssue };

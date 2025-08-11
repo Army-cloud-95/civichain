@@ -18,7 +18,7 @@ const createInvite = asyncHandler(async (req, res) => {
     invite.token = token;
 
     await invite.save();
-    const inviteLink = `${process.env.BASE_URL}/officials/register/${token}`;
+    const inviteLink = `${process.env.BASE_URL}/official/register/${token}`;
     const inviteCreated = await Invite.findById(invite._id);
 
     if (!inviteCreated) {

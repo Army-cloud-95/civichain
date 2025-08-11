@@ -2,7 +2,7 @@ import { asyncHandler } from "../utils/errorHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-import { getEmailTemplate } from "../utils/emailTemplate.js";
+// import { getEmailTemplate } from "../utils/emailTemplate.js";
 
 const registerUser = asyncHandler(async (req, res) => {
     //get user detail from frontend
@@ -56,16 +56,6 @@ const registerUser = asyncHandler(async (req, res) => {
             "Something went wrong while registering the user"
         );
     }
-    const emailData = {
-        name: user.name,
-        verificationLink: `${process.env.BASE_URL}/user/verify-email?token=${user.verificationToken}`,
-    };
-    const template = getEmailTemplate("citizen", emailData);
-    await sendEmail({
-        to: user.email,
-        subject: template.subject,
-        html: template.html,
-    });
     //remove password and refresh token from response
     //check for user creation: null to nahi hua h
 
@@ -77,11 +67,5 @@ const registerUser = asyncHandler(async (req, res) => {
         );
 });
 
-const verifyEmail = asyncHandler(async (req, res) => {
-    const { token } = req.params;
-    const user = await User.findOne({
-        $and: [{ verificationToken: token }, {}],
-    });
-});
 
 export { registerUser };

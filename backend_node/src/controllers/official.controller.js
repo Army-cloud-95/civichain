@@ -2,7 +2,6 @@ import { asyncHandler } from "../utils/errorHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { Official } from "../models/official.model.js";
-import { Admin } from "../models/admin.model.js";
 import { Invite } from "../models/invite.model.js";
 
 function generateOfficialId(token) {
@@ -12,6 +11,7 @@ function generateOfficialId(token) {
 }
 
 const registerOfficial = asyncHandler(async (req, res) => {
+
     console.log(req.inviteData);
     const { name, password, email, phone, regionAssigned } = req.body;
     const { inviteData } = req;
@@ -44,44 +44,5 @@ const registerOfficial = asyncHandler(async (req, res) => {
 
     return res.status(201).json(new ApiResponse(200, officialCreated, "Official Registered","/dashboard"));
 });
-const reviewAdminRegistration = asyncHandler(async (req, res) => {
-    const { adminId } = req.params;
-    const { action, role } = req.body;
 
-    if (role != "Official") {
-        throw new ApiError(403, "Only officials can review this");
-    }
-    if (!["approve", "reject"].includes(action)) {
-        throw new ApiError(400, "Action must be either 'approve' or 'reject'");
-    }
-
-    const admin = await Admin.findOne({ adminId });
-    if (!admin) throw new ApiError(404, "Admin not found");
-    if (admin.status != "pending") {
-        throw new ApiError(
-            400,
-            `Admin registration has already been ${admin.status}`
-        );
-    }
-
-    admin.status = action === "approve" ? "approved" : "rejected";
-    admin.reviewedBy = req.user.officialId;
-    await admin.save();
-
-    const updatedAdmin = await Admin.findOne({ adminId }).select(
-        "-password -RefreshToken"
-    );
-
-    return res
-        .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                updatedAdmin,
-                `Admin registered ${action}d successfully`
-            )
-        );
-});
-
-
-export { reviewAdminRegistration, registerOfficial };
+export { registerOfficial };

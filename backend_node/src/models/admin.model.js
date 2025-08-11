@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 const adminSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true,
         lowercase: true,
     },
     createdBy: {
@@ -33,16 +32,16 @@ const adminSchema = new mongoose.Schema({
     },
     phone: {
         type: Number,
-        required: true,
+        // required: true,
         unique: true,
     },
     refreshToken: {
         type: String,
-        required: true,
+        // required: true,
     },
     regionAssigned: {
         type: String,
-        required: true,
+        // required: true,
     },
     // location:{
     //     type: { type: String, default:"Point"},

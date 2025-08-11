@@ -3,9 +3,9 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 //Routes
 import userRouter from "./routes/user.route.js";
-import issueRouter from "./routes/issue.route.js";
-import inviteRouter from "./routes/invite.route.js";
+// import issueRouter from "./routes/issue.route.js";
 import officialRouter from "./routes/official.route.js";
+import adminRouter from "./routes/admin.route.js";
 import { loginUser } from "./controllers/user.controller.js";
 
 const app = express();
@@ -22,10 +22,9 @@ app.use(express.urlencoded({ extended: true, limit: "1mb" }));
 app.use(express.static("public"));
 app.use(cookieParser());
 
-app.use("/citizens", userRouter);
-app.use("/issues", issueRouter);
-app.use("/officials",officialRouter);
-app.use("/admins",inviteRouter);
+app.use("/citizen", userRouter);
+app.use("/official",officialRouter);
+app.use("/admin",adminRouter);
 app.post("/login",loginUser);
 
 export { app };

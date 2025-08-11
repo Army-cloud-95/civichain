@@ -27,9 +27,9 @@ const generateAccessAndRefreshTokens = async (UserId, Model) => {
 
 function checkModel(userName) {
     try {
-        if (userName.startsWith("ADM")) {
+        if (userName.startsWith("ADM")||userName.startsWith("adm")) {
             return Admin;
-        } else if (userName.startsWith("OFF")) {
+        } else if (userName.startsWith("OFF")||userName.startsWith("off")) {
             return Official;
         } else if (userName.includes("@")) {
             return User;
@@ -42,6 +42,7 @@ function checkModel(userName) {
 }
 
 const loginUser = asyncHandler(async (req, res) => {
+    
     const { userName, password } = req.body;
 
     if ([userName, password].some((field) => !field || !field?.trim() === "")) {
@@ -54,7 +55,7 @@ const loginUser = asyncHandler(async (req, res) => {
     const query = userName.includes("@") ? { email: userName } : { userName };
     const user = await Model.findOne(query);
     if (!user) {
-        throw new ApiError(404, `Model not found`);
+        throw new ApiError(404, "Model not found");
     }
     const isPasswordValid = await user.isCorrectPassword(password);
     if (!isPasswordValid) throw new ApiError(401, "Invalid user credential");

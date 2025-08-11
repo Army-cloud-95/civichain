@@ -1,6 +1,9 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
 import { app } from "./app.js";
+import { Admin } from "./models/admin.model.js";
+import { createAdminId } from "./controllers/admin.controller.js";
+import { generateAccessAndRefreshTokens } from "./controllers/user.controller.js";
 
 dotenv.config({ path: "./.env" });
 
@@ -9,6 +12,21 @@ const connectDB = async () => {
     const connectionInstance = await mongoose.connect(
       `${process.env.MONGODB_URL}`
     );
+    const adminCount = await Admin.countDocuments();
+    if(adminCount===0){
+    const admin = await Admin.create({
+        userName: await createAdminId(),
+        email: process.env.ADMIN_EMAIL,
+        password: process.env.ADMIN_PASSWORD,
+        createdBy: "system",
+    });
+    
+    const adminSaved = await Admin.findById(admin._id).select("-password -refreshToken");
+    if (!adminSaved) {
+        throw new ApiError(500, "Something went wrong while creating admin");
+    }
+    console.log("Admin created");
+    }
     console.log(
       `\n MongoDB connected, DB HOST:${connectionInstance.connection.host}`
     );

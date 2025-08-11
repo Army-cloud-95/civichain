@@ -1,5 +1,5 @@
-import { asyncHandler } from "../../utils/errorHandler";
-import { ApiError } from "../../utils/ApiError";
+import { asyncHandler } from "../../utils/errorHandler.js";
+import { ApiError } from "../../utils/ApiError.js";
 
 export const requireRoles = (...allowedRoles) => {
     return asyncHandler((req, res, next) => {
@@ -7,7 +7,10 @@ export const requireRoles = (...allowedRoles) => {
             throw new ApiError(401, "Authentication required");
         }
 
-        const userRole = req.role; // Admin, Official, or Citizen
+        const userRole = req.user.role; // Admin, Official, or Citizen
+        console.log('User role:', userRole);
+        console.log('Allowed roles:', allowedRoles);
+
         if (!allowedRoles.includes(userRole)) {
             throw new ApiError(
                 403,
