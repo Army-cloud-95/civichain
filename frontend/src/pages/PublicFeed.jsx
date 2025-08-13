@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const staticIssues = [
   {
@@ -47,6 +48,18 @@ const PublicFeed = () => {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const [locationFilter, setLocationFilter] = useState('');
+
+  const locationHook = useLocation();
+
+  // Read query params on mount / when URL changes
+  useEffect(()=>{
+    const params = new URLSearchParams(locationHook.search);
+    const q = params.get('q') || '';
+    const loc = params.get('loc') || '';
+    if (q) setSearchTerm(q);
+    if (loc) setLocationFilter(loc);
+  }, [locationHook.search]);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -94,11 +107,16 @@ const PublicFeed = () => {
 
   // Filter and sort static issues
   const filteredStatic = staticIssues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm
+      ? (issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      : true;
+    const matchesLocation = locationFilter
+      ? issue.location.toLowerCase().includes(locationFilter.toLowerCase())
+      : true;
     const matchesCategory = categoryFilter ? issue.category === categoryFilter : true;
     const matchesStatus = statusFilter ? issue.status === statusFilter : true;
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesLocation && matchesCategory && matchesStatus;
   }).sort((a, b) => {
     if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
     if (sortBy === 'votes') return b.votes - a.votes;
@@ -109,13 +127,17 @@ const PublicFeed = () => {
     return 0;
   });
 
-  // Filter and sort dynamic issues
   const filteredDynamic = issues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm
+      ? (issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      : true;
+    const matchesLocation = locationFilter
+      ? (issue.location || '').toLowerCase().includes(locationFilter.toLowerCase())
+      : true;
     const matchesCategory = categoryFilter ? issue.category === categoryFilter : true;
     const matchesStatus = statusFilter ? issue.status === statusFilter : true;
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesLocation && matchesCategory && matchesStatus;
   }).sort((a, b) => {
     if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
     if (sortBy === 'votes') return b.votes - a.votes;
@@ -188,74 +210,93 @@ const PublicFeed = () => {
           </p>
         </div>
 
-        {/* Filter Section */}
-        <div className="card mb-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-            <input
-              type="text"
-              placeholder="Search issues..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="form-input"
-            />
-            
-            <select
-              value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className="form-input"
-            >
-              <option value="">All Categories</option>
-              <option value="electricity">Electricity</option>
-              <option value="sanitation">Sanitation</option>
-              <option value="water">Water</option>
-              <option value="roads">Roads</option>
-              <option value="parks">Parks</option>
-            </select>
-            
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="form-input"
-            >
-              <option value="">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="in-progress">In Progress</option>
-              <option value="resolved">Resolved</option>
-            </select>
-            
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="form-input"
-            >
-              <option value="date">Sort by Date</option>
-              <option value="votes">Sort by Votes</option>
-              <option value="urgency">Sort by Urgency</option>
-            </select>
-          </div>
+        {/* Responsive Layout: Sidebar + Content */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sticky Sidebar Filters */}
+          <aside className="lg:w-7/24 w-full lg:sticky lg:top-24 self-start z-10">
+            <div className="card p-6 h-full lg:min-h-[60vh] flex flex-col gap-6 shadow-medium">
+              <h2 className="text-lg font-semibold mb-2 text-black">Filter Issues</h2>
+              <input
+                type="text"
+                placeholder="Search issues..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-input mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Filter by location..."
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
+                className="form-input mb-2"
+              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select
+                  value={categoryFilter}
+                  onChange={(e) => setCategoryFilter(e.target.value)}
+                  className="form-input"
+                >
+                  <option value="">All Categories</option>
+                  <option value="electricity">Electricity</option>
+                  <option value="sanitation">Sanitation</option>
+                  <option value="water">Water</option>
+                  <option value="roads">Roads</option>
+                  <option value="parks">Parks</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  className="form-input"
+                >
+                  <option value="">All Status</option>
+                  <option value="pending">Pending</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="resolved">Resolved</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Sort By</label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="form-input"
+                >
+                  <option value="date">Sort by Date</option>
+                  <option value="votes">Sort by Votes</option>
+                  <option value="urgency">Sort by Urgency</option>
+                </select>
+              </div>
+            </div>
+          </aside>
+
+          {/* Issues Grid */}
+          <main className="flex-1">
+            {loading ? (
+              <div className="text-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+                <p className="mt-4 text-gray-600">Loading issues...</p>
+              </div>
+            ) : error ? (
+              <div className="text-center py-12">
+                <p className="text-red-600">{error}</p>
+              </div>
+            ) : (
+              <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                {[...filteredStatic, ...filteredDynamic].map(renderCard)}
+              </div>
+            )}
+
+            {!loading && !error && [...filteredStatic, ...filteredDynamic].length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-600">No issues found matching your criteria.</p>
+              </div>
+            )}
+          </main>
         </div>
-
-        {/* Issues Grid */}
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-            <p className="mt-4 text-gray-600">Loading issues...</p>
-          </div>
-        ) : error ? (
-          <div className="text-center py-12">
-            <p className="text-red-600">{error}</p>
-          </div>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...filteredStatic, ...filteredDynamic].map(renderCard)}
-          </div>
-        )}
-
-        {!loading && !error && [...filteredStatic, ...filteredDynamic].length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-gray-600">No issues found matching your criteria.</p>
-          </div>
-        )}
       </div>
     </div>
   );
