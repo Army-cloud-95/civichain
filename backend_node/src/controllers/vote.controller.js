@@ -19,8 +19,6 @@ const postvote = asyncHandler(async(req,res) => {
     const voteData = {
         userId: userId.toString(),
         issueId,
-        
-        
     };
     
 

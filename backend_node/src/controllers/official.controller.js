@@ -45,4 +45,12 @@ const registerOfficial = asyncHandler(async (req, res) => {
     return res.status(201).json(new ApiResponse(200, officialCreated, "Official Registered","/dashboard"));
 });
 
-export { registerOfficial };
+const getOffIssues = asyncHandler(async(req,res) => {
+    const { regionAssigned } = req.user.regionAssigned;
+    if(!regionAssigned){
+        throw new ApiError(404,"Region assigned not found");
+    }
+
+})
+
+export { registerOfficial, getOffIssues };
