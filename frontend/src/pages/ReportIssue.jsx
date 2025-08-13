@@ -1,5 +1,4 @@
 import ReportForm from '../components/ReportForm';
-import InfoCard from '../components/InfoCard';
 
 const ReportIssue = () => {
   return (

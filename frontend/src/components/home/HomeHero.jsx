@@ -1,102 +1,99 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+// TODO: Add your image file (e.g., hero.png) to src/assets and adjust the filename below if different
+import heroImage from "../../assets/hero.png"; // Place hero.png in src/assets/
 
 const HomeHero = () => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationTerm, setLocationTerm] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = () => {
+    // Build query string with existing values if present
+    const params = new URLSearchParams();
+    if (searchTerm.trim()) params.set('q', searchTerm.trim());
+    if (locationTerm.trim()) params.set('loc', locationTerm.trim());
+    navigate(`/feed${params.toString() ? `?${params.toString()}` : ''}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSearch();
+    }
+  };
   return (
-    <section className="min-h-screen pt-16 bg-gradient-to-br from-blue-50 to-white">
+    <section className="min-h-screen pt-16 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8 fade-in">
-            <div className="space-y-4">
-              <h1 className="text-responsive-xl font-bold text-black leading-tight">
-                Make Your City Better,{" "}
-                <span className="gradient-text">One Report at a Time</span>
+          <div className="space-y-10">
+            <div className="space-y-6 pr-2">
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
+                Find civic issues that need{" "}
+                <span className="text-blue-600">your attention & action.</span>
               </h1>
-              <p className="text-responsive-md text-gray-600 leading-relaxed max-w-2xl">
-                Spotted a pothole? Broken streetlight? Help improve your community
-                by reporting issues directly to your local municipality through our
-                blockchain-powered platform.
+              <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl">
+                Help improve your community by reporting and tracking civic issues. 
+                Join thousands of active citizens making a difference through our blockchain-powered platform.
               </p>
             </div>
-
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/report" className="btn-primary text-center">
-                Report an Issue →
-              </Link>
-              <Link to="/feed" className="btn-secondary">
-                View Listed Issues
-              </Link>
+            <div className="flex flex-col sm:flex-row gap-4 items-start w-full">
+              <div className="flex-1 max-w-60">
+                <div className="relative group w-full sm:w-56">
+                  <input
+                    type="text"
+                    placeholder="Search issues..."
+                    value={searchTerm}
+                    onChange={(e)=>setSearchTerm(e.target.value)}
+                    onKeyDown={handleKeyDown}
+                    className="w-full px-5 py-4 pl-14 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 text-base"
+                  />
+                  <svg className="w-6 h-6 text-gray-400 group-focus-within:text-blue-500 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+        <div className="relative w-full sm:w-64">
+                <input
+                  type="text"
+                  placeholder="Location"
+                  value={locationTerm}
+                  onChange={(e)=>setLocationTerm(e.target.value)}
+                  onKeyDown={handleKeyDown}
+          className="w-full px-5 py-4 pl-12 border border-gray-300 rounded-xl bg-white shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 text-base"
+                />
+                <svg className="w-5 h-5 text-gray-400 absolute left-4 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <button
+                onClick={handleSearch}
+                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-8 py-3.5 rounded-lg font-semibold shadow-sm transition-colors whitespace-nowrap sm:ml-1 lg:ml-3 text-base"
+              >
+                Find Issues
+              </button>
             </div>
 
-            <div className="flex items-center gap-8 pt-4">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span className="text-sm text-gray-600">50K+ Active Users</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 bg-primary rounded-full"></div>
-                <span className="text-sm text-gray-600">100+ Cities</span>
-              </div>
+            <div className="text-sm text-gray-500">
+              <span className="font-medium">Suggestions:</span> 
+              <span className="ml-2">
+                <button onClick={()=>setSearchTerm('Road Issues')} className="text-blue-600 hover:underline mr-3">Road Issues</button>
+                <button onClick={()=>setSearchTerm('Street Lighting')} className="text-blue-600 hover:underline mr-3">Street Lighting</button>
+                <button onClick={()=>setSearchTerm('Water Supply')} className="text-blue-600 hover:underline mr-3">Water Supply</button>
+                <button onClick={()=>setSearchTerm('Waste Management')} className="text-blue-600 hover:underline mr-3">Waste Management</button>
+                <button onClick={()=>setSearchTerm('Public Transport')} className="text-blue-600 hover:underline">Public Transport</button>
+              </span>
             </div>
           </div>
 
-          <div className="relative slide-up">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary-light/20 rounded-3xl blur-3xl"></div>
-              <div className="relative rounded-3xl overflow-hidden shadow-strong">
-                {/* Background Image */}
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-600/20"></div>
-                <div className="relative bg-gradient-to-br from-white/90 to-blue-50/90 backdrop-blur-sm p-8">
-                  <div className="text-center mb-8">
-                    <div className="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                      <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-2xl font-bold text-gray-800 mb-2">Smart Civic Platform</h3>
-                    <p className="text-gray-600">AI-powered issue tracking with blockchain verification</p>
-                  </div>
-                  
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm border border-white/20">
-                      <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">AI Analysis</p>
-                        <p className="text-sm text-gray-600">Smart categorization</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm border border-white/20">
-                      <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">Blockchain Secure</p>
-                        <p className="text-sm text-gray-600">Immutable records</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-4 p-4 bg-white/60 rounded-xl backdrop-blur-sm border border-white/20">
-                      <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                      </div>
-                      <div>
-                        <p className="font-semibold text-gray-800">Community Driven</p>
-                        <p className="text-sm text-gray-600">Citizen collaboration</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div className="relative flex items-center justify-center lg:justify-end pr-2 lg:pr-8">
+            <img
+              src={heroImage}
+              alt="CiviChain platform preview"
+              className="w-[92%] md:w-[88%] lg:w-[82%] xl:w-[78%] rounded-2xl object-contain translate-x-2 lg:translate-x-6"
+              loading="lazy"
+            />
           </div>
         </div>
       </div>

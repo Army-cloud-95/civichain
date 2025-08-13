@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const staticIssues = [
   {
@@ -47,6 +48,18 @@ const PublicFeed = () => {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [sortBy, setSortBy] = useState('date');
+  const [locationFilter, setLocationFilter] = useState('');
+
+  const locationHook = useLocation();
+
+  // Read query params on mount / when URL changes
+  useEffect(()=>{
+    const params = new URLSearchParams(locationHook.search);
+    const q = params.get('q') || '';
+    const loc = params.get('loc') || '';
+    if (q) setSearchTerm(q);
+    if (loc) setLocationFilter(loc);
+  }, [locationHook.search]);
 
   useEffect(() => {
     const fetchIssues = async () => {
@@ -94,11 +107,16 @@ const PublicFeed = () => {
 
   // Filter and sort static issues
   const filteredStatic = staticIssues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm
+      ? (issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      : true;
+    const matchesLocation = locationFilter
+      ? issue.location.toLowerCase().includes(locationFilter.toLowerCase())
+      : true;
     const matchesCategory = categoryFilter ? issue.category === categoryFilter : true;
     const matchesStatus = statusFilter ? issue.status === statusFilter : true;
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesLocation && matchesCategory && matchesStatus;
   }).sort((a, b) => {
     if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
     if (sortBy === 'votes') return b.votes - a.votes;
@@ -110,11 +128,16 @@ const PublicFeed = () => {
   });
 
   const filteredDynamic = issues.filter(issue => {
-    const matchesSearch = issue.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                         issue.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = searchTerm
+      ? (issue.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        issue.description.toLowerCase().includes(searchTerm.toLowerCase()))
+      : true;
+    const matchesLocation = locationFilter
+      ? (issue.location || '').toLowerCase().includes(locationFilter.toLowerCase())
+      : true;
     const matchesCategory = categoryFilter ? issue.category === categoryFilter : true;
     const matchesStatus = statusFilter ? issue.status === statusFilter : true;
-    return matchesSearch && matchesCategory && matchesStatus;
+    return matchesSearch && matchesLocation && matchesCategory && matchesStatus;
   }).sort((a, b) => {
     if (sortBy === 'date') return new Date(b.date) - new Date(a.date);
     if (sortBy === 'votes') return b.votes - a.votes;
@@ -198,6 +221,13 @@ const PublicFeed = () => {
                 placeholder="Search issues..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                className="form-input mb-2"
+              />
+              <input
+                type="text"
+                placeholder="Filter by location..."
+                value={locationFilter}
+                onChange={(e) => setLocationFilter(e.target.value)}
                 className="form-input mb-2"
               />
               <div>
