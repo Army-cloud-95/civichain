@@ -24,10 +24,6 @@ const IssueSchema = new mongoose.Schema(
             type: [String],
         },
         address: {
-            city: {
-                type: String,
-                required: false,
-            },
             state: {
                 type: String,
                 required: true, // State should be required
@@ -80,10 +76,11 @@ const IssueSchema = new mongoose.Schema(
             pincode: String,
             fullAddress: String,
         },
-        // priority:{
-        //     type:Number,
-        //     required:true,
-        // },predictionConfidence:{
+        priority: {
+            type: String,
+            required: true,
+        },
+        // predictionConfidence:{
         //     type:Number,
         //     required:true,
         // },

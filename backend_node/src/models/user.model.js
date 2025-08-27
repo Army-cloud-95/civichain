@@ -11,9 +11,9 @@ const UserSchema = new mongoose.Schema(
         },
         userName: {
             type: String,
-            required: true,
+            // required: true,
             index: true,
-            unique: true,
+            // unique: true,
             lowercase: true,
             trim: true,
         },
@@ -23,27 +23,27 @@ const UserSchema = new mongoose.Schema(
             unique: true,
             lowercase: true,
         },
-        emailVerified:{
-            type:Boolean,
-            required:true,
-            default:false,
+        emailVerified: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
         phone: {
             type: Number,
-            required: true,
-            unique: true,
+            // required: true,
+            // unique: true,
         },
         password: {
             type: String,
             required: [true, "Password is required"],
-            min: [8, "Min Password should be 8"],
+            min: [5, "Min Password should be 5"],
             max: 12,
         },
         refreshToken: {
             type: String,
         },
-        verificationToken:{
-            type:String,
+        verificationToken: {
+            type: String,
         },
         role: {
             type: String,
@@ -63,7 +63,7 @@ UserSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next();
 
     this.password = await bcrypt.hash(this.password, 10);
-    
+
     next();
 });
 
@@ -71,22 +71,25 @@ UserSchema.methods.isCorrectPassword = async function (password) {
     return await bcrypt.compare(password, this.password);
 };
 
-UserSchema.methods.generateVerificationToken = function(){
-    return jwt.sign({
-        _id: this._id,
-        email:this.email,
-    },
-process.env.VERIFICATION_SECRET,{
-    expiresIn: "1h"
-});
-}
-UserSchema.methods.verifyVerificationToken = function(token){
-    if(!this.verificationToken || this.verificationToken !== token)
+UserSchema.methods.generateVerificationToken = function () {
+    return jwt.sign(
+        {
+            _id: this._id,
+            email: this.email,
+        },
+        process.env.VERIFICATION_SECRET,
+        {
+            expiresIn: "1h",
+        }
+    );
+};
+UserSchema.methods.verifyVerificationToken = function (token) {
+    if (!this.verificationToken || this.verificationToken !== token)
         return false;
-    if(new Date() > new Date(this.createdAt.getTime() + (60*60*1000)))
+    if (new Date() > new Date(this.createdAt.getTime() + 60 * 60 * 1000))
         return false;
     return true;
-}
+};
 
 UserSchema.methods.generateAccessToken = function () {
     return jwt.sign(
@@ -94,7 +97,7 @@ UserSchema.methods.generateAccessToken = function () {
             _id: this._id,
             email: this.email,
             userName: this.userName,
-            role:this.role,
+            role: this.role,
         },
         process.env.ACCESS_TOKEN_SECRET,
         {
@@ -106,7 +109,7 @@ UserSchema.methods.generateRefreshToken = function () {
     return jwt.sign(
         {
             _id: this._id,
-            role:this.role,
+            role: this.role,
         },
         process.env.REFRESH_TOKEN_SECRET,
         {

@@ -2,32 +2,34 @@ import { asyncHandler } from "../utils/errorHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.model.js";
-// import { getEmailTemplate } from "../utils/emailTemplate.js";
 
 const registerUser = asyncHandler(async (req, res) => {
     //get user detail from frontend
-    const { name, userName, email, phone, password } = req.body;
+    const { name, email, password } = req.body;
 
     //validate - not empty
     if (
-        [name, userName, email, phone, password].some(
-            (field) => !field || field?.trim() === ""
-        )
+        // [name, email, password].some(
+        //     (field) => !field || field?.trim() === ""
+        // )
+        !name ||
+        !email ||
+        !password
     ) {
         throw new ApiError(400, `All fields are required`);
     }
-    if (
-        userName.startsWith("OFF") ||
-        userName.startsWith("ADM") ||
-        userName.startsWith("off") ||
-        userName.startsWith("adm")
-    ) {
-        throw new ApiError("Use a unique username");
-    }
+    // if (
+    //     userName.startsWith("OFF") ||
+    //     userName.startsWith("ADM") ||
+    //     userName.startsWith("off") ||
+    //     userName.startsWith("adm")
+    // ) {
+    //     throw new ApiError("Use a unique username");
+    // }
 
     // check if user already exits:email
     const existingUser = await User.findOne({
-        $or: [{ email }, { userName }],
+        $or: [{ email }],
     });
 
     if (existingUser) {
@@ -38,9 +40,9 @@ const registerUser = asyncHandler(async (req, res) => {
     // create entry in db
     const user = await User.create({
         name,
-        userName: userName.toLowerCase(),
+        // userName: userName.toLowerCase(),
         email,
-        phone,
+        // phone,
         password,
         emailVerified: false,
     });
@@ -63,9 +65,13 @@ const registerUser = asyncHandler(async (req, res) => {
     return res
         .status(201)
         .json(
-            new ApiResponse(200, userCreated, "User Registered Successfully","/dashboard")
+            new ApiResponse(
+                200,
+                userCreated,
+                "User Registered Successfully",
+                "/dashboard"
+            )
         );
 });
-
 
 export { registerUser };
