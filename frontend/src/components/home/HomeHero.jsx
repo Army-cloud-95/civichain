@@ -25,14 +25,14 @@ const HomeHero = () => {
   return (
     <section className="min-h-screen pt-16 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="max-w-7xl mx-auto px-6 lg:px-8 py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
+        <div className="grid lg:grid-cols-2 gap-8 items-center">
           <div className="space-y-10">
-            <div className="space-y-6 pr-2">
+            <div className="space-y-6  pt-4">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight tracking-tight">
                 Find civic issues that need{" "}
                 <span className="text-blue-600">your attention & action.</span>
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 leading-relaxed max-w-3xl">
+              <p className="text-lg md:text-lg text-gray-600 leading-relaxed max-w-3xl">
                 Help improve your community by reporting and tracking civic issues. 
                 Join thousands of active citizens making a difference through our blockchain-powered platform.
               </p>
@@ -69,7 +69,7 @@ const HomeHero = () => {
               </div>
               <button
                 onClick={handleSearch}
-                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-8 py-3.5 rounded-lg font-semibold shadow-sm transition-colors whitespace-nowrap sm:ml-1 lg:ml-3 text-base"
+                className="bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white px-8 py-4 rounded-lg font-semibold shadow-sm transition-colors whitespace-nowrap sm:ml-1 lg:ml-3 text-base"
               >
                 Find Issues
               </button>
@@ -87,7 +87,7 @@ const HomeHero = () => {
             </div>
           </div>
 
-          <div className="relative flex items-center justify-center lg:justify-end pr-2 lg:pr-8">
+          <div className="relative flex items-center justify-center lg:justify-end pr-2 lg:pb-12 ">
             <img
               src={heroImage}
               alt="CiviChain platform preview"
